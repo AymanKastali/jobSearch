@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <h3>
+                Applied job posts
+            </h3>
+            <hr> {% for job in jobs_applied %}
+            <div>
+                <div class="d-flex" style="justify-content: space-between;">
+                    <div>
+                        <div>
+                            <h5>
+                                <a href="{% url 'profile-id-page-jobposts-id-post' request.user.id job.id %}">{{ job }}</a>
+
+                            </h5>
+                        </div>
+                        <div>
+                            <p style="margin-bottom: 0px;">{{ job.user.profile.name }}</p>
+                        </div>
+                        <div>
+                            {% if job.state == True %}
+                            <span class="badge bg-success">Available</span> {% else %}
+                            <span class="badge bg-danger">Unavailable</span> {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-group dropstart">
+                            <p style="cursor: pointer;" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><strong>...</strong></p>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr> {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

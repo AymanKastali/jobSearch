@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% block content %}
+<div class="card shadow">
+    <div class="card-body">
+        <h4>Reply delete</h4>
+        <hr>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <p>Are you sure you want to delete <strong>{{reply}}</strong> reply ?!</p>
+            <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-x-circle"></i> Delete</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

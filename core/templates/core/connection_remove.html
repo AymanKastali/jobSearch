@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% block content %}
+<div class="card shadow">
+    <div class="card-body">
+        <h4>Connection remove</h4>
+        <hr>
+        <form action="{% url 'profile-connections-id-remove' other_user.id %}" method="POST">
+            {% csrf_token %}
+            <p>Are you sure you want to remove <strong>{{other_user.profile.name}}</strong>?!</p>
+            <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-person-dash-fill"></i> Remove</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <div>
+                <div class="d-flex" style="justify-content: space-between;">
+                    <div>
+                        <div>
+                            <h5>
+                                {{ post }}
+                            </h5>
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <small style="font-size: 12px">{{ post.get_date }}</small>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-group dropstart">
+                            <p style="cursor: pointer;" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><strong>...</strong></p>
+                            <ul class="dropdown-menu">
+                                {% if post.user == request.user %}
+                                <li><a class="dropdown-item" href="{% url 'profile-jobpost-edit' post.id %}"><small><i class="bi bi-pencil-fill"></i> Edit post</small></a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile-jobpost-delete' post.id %}"><small><i class="bi bi-x-circle-fill"></i> Delete post</small></a></li>
+                                {% endif %}
+                                <li>
+                                    {% if post in saved_jobposts %}
+                                    <small class="dropdown-item">
+                                        <i class="bi bi-bookmark-fill"></i> Saved
+                                    </small>
+                                    {% else %}
+                                    <small class="dropdown-item">
+                                        <form action="{% url 'save-jobpost-id' post.id %}" method="POST">
+                                             {% csrf_token %}
+                                             <i class="bi bi-bookmark"></i>
+                                             <!-- <input type="hidden" name="postId" value='{{post.id}}'> -->
+                                             <button type="submit" style="background: none; border: none;">Save job post</button>
+                                         </form>
+                                    </small>
+                                    {% endif %}
+                                </li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p style="margin-bottom: 5px;">About: <a href="{% url 'profile-id-page' post.user.id %}">{{ post.user.profile.name }}</a></p>
+                    <small>
+                        {{ post.user.profile.about }}
+                    </small>
+                </div>
+                <br>
+                <div style="margin-bottom: 10px;">
+                    <h6>Location:</h6>
+                    <small>
+                        {{ post.city }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Responsabilities:</h6>
+                    <small>
+                        {{ post.responsabilities }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Required skills:</h6>
+                    <small>
+                        {{ post.required_skills }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Job Time:</h6>
+                    <small>
+                        {{ post.job_time }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Salary:</h6>
+                    <small>
+                        {{ post.salary }}
+                    </small>
+                </div>
+            </div>
+            {% if candidate in candidates_arr %}
+            <h5><span class="badge bg-success">Applied</span></h5>
+            {% else %}
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'profile-id-page-jobposts-id-post-apply' user.id post.id %}"><i class="bi bi-arrow-90deg-up"></i> Apply</a> {% comment %} <span class="badge bg-success">Applied</span> {% endcomment %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

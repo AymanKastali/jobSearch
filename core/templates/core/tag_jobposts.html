@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <div>
+                <h3>
+                    Tags Job Posts
+                </h3>
+            </div>
+            <hr> {% for post in tag_posts %}
+            <div>
+                <div class="d-flex" style="justify-content: space-between;">
+                    <div>
+                        <div class="d-flex">
+                            <h5 style="padding-right: 10px">
+                                <a href="{% url 'profile-id-page-jobposts-id-post' post.user.id post.id %}">{{ post }}</a>
+                            </h5>
+                            {% if post.get_candidates_count > 0 %}
+                            <small><span class="badge bg-success">{{ post.get_candidates_count }} Candidates</span></small> {% endif %}
+                        </div>
+                        <div>
+                            <p style="margin-bottom: 0px">{{ post.user.profile.name }}</p>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <small style="font-size: 12px">{{ post.get_date }}</small>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-group dropstart">
+                            <p style="cursor: pointer;" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><strong>...</strong></p>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h6 style="margin-bottom: 0px;">About:</h6>
+                    <small>
+                        {{ post.user.profile.about }}
+                    </small>
+                </div>
+                <div>
+                    <h6 style="margin-bottom: 0px;">Location:</h6>
+                    <small>
+                        {{ post.city }}
+                    </small>
+                </div>
+            </div>
+            <hr> {% endfor %} {% load core_extras %}
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if job_posts.has_previous %}
+                    <li class="page-item"><a class="page-link" href="{% my_url 1 'page' request.GET.urlencode %}">first</a></li>
+                    <li class="page-item"><a class="page-link" href="{% my_url job_posts.previous_page_number 'page' request.GET.urlencode %}">&laquo;</a></li>
+                    {% endif %}
+
+                    <li class="page-item disabled"><a class="page-link" href="#"><strong>page {{ job_posts.number }} of {{ job_posts.paginator.num_pages }}</strong></a></li>
+
+                    {% if job_posts.has_next %}
+                    <li class="page-item"><a class="page-link" href="{% my_url job_posts.next_page_number 'page' request.GET.urlencode %}">&raquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="{% my_url job_posts.paginator.num_pages 'page' request.GET.urlencode %}">last</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+{% endblock content %}

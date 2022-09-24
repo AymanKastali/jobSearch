@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% block content %}
+<div class="card shadow">
+    <div class="card-body">
+        <h4>Follower block</h4>
+        <hr>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <p>Are you sure you want to block <strong>{{user.profile.name}}</strong>?!</p>
+            <button class="btn btn-sm btn-outline-dark" type="submit"><i class="bi bi-dash-circle-fill"></i> Block</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

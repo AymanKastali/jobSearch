@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <h5>{{reply}} Likes</h5>
+            <hr>
+            <div class="d-flex" style="align-items: center;">
+                {% for reply in reply.is_liked %}
+                <i style="margin-right: 5px" class="bi bi-hand-thumbs-up-fill"></i>
+                <div>
+                    <img style="border-radius: 500px; margin-right: 5px" width="50px" height="50px" src="{{ reply.user.profile.pic.url }}" alt=""> {% if request.user == reply.user %}
+                    <a href="{% url 'profile' %}">{{reply.user.profile.name}}</a>
+                    {% else %}
+                    <a href="{% url 'profile-id-user' reply.user.id %}">{{reply.user.profile.name}}</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

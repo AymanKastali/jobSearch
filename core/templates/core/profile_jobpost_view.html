@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <div>
+                <div class="d-flex" style="justify-content: space-between;">
+                    <div>
+                        <div>
+                            {% if jobpost.state == True %}
+                            <h5>{{ jobpost }} <span class="badge bg-success">Opened</span></h5>
+                            {% else %}
+                            <h5>{{ jobpost }} <span class="badge bg-danger">Closed</span></h5>
+                            {% endif %}
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            <small style="font-size: 12px">{{ jobpost.created_at }}</small>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-group dropstart">
+                            <p style="cursor: pointer;" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><strong>...</strong></p>
+                            <ul class="dropdown-menu">
+                                {% if jobpost.user == request.user %}
+                                <li><a class="dropdown-item" href="{% url 'profile-jobpost-edit' jobpost.id %}"><small><i class="bi bi-pencil-fill"></i> Edit post</small></a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile-jobpost-delete' jobpost.id %}"><small><i class="bi bi-x-circle-fill"></i> Delete post</small></a></li>
+                                {% endif %}
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>About: <a href="{% url 'profile-id-page' jobpost.user.id %}">{{ jobpost.user.page.name }}</a></h6>
+                    <small>
+                        {{ jobpost.user.profile.about }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Location:</h6>
+                    <small>
+                        {{ jobpost.city }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Responsabilities:</h6>
+                    <small>
+                        {{ jobpost.responsabilities }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Required skills:</h6>
+                    <small>
+                        {{ jobpost.required_skills }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Job Time:</h6>
+                    <small>
+                        {{ jobpost.job_time }}
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <h6>Salary:</h6>
+                    <small>
+                        {{ jobpost.salary }}
+                    </small>
+                </div>
+            </div>
+            {% if jobpost.state == True %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger">Close post</button>
+            </form>
+            <hr>
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'profile_jobpost_candidates' jobpost.id %}"> View candidates</a> {% elif jobpost.state == False and jobpost.get_accepted_nominee %}
+            <hr>
+            <h5>Accepted nominee:</h5>
+            <div class="d-flex">
+                <div style="padding-right: 10px;">
+                    <img style="border-radius: 500px;" width="50px" height="50px" src="{{ jobpost.get_accepted_nominee.user.get.profile.pic.url }}" alt="">
+                </div>
+                <div>
+                    <h5 style="margin-bottom: 0px;"><a href="{% url 'profile-id-user' jobpost.get_accepted_nominee.user.get.id %}">{{ jobpost.get_accepted_nominee.user.get.profile.name }}</a></h5>
+                    <small>{{ jobpost.get_accepted_nominee.user.get.profile.work_title }}</small>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

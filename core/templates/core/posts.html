@@ -1,0 +1,232 @@
+{% extends 'base.html' %} {% block content %}
+<div class="card shadow col-8 offset-2">
+    <div class="card-body">
+        <h3>Posts</h3>
+        <hr> {% for post in posts %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex" style="justify-content: space-between;">
+                    <div class="d-flex" style="align-items: center; padding-bottom: 10px">
+                        {% if post.user.profile %}
+                        <img width="50px" height="50px" style="border-radius: 500px; margin-right: 20px" src="{{ post.user.profile.pic.url }}">
+                        <div>
+                            {% if request.user.profile == post.user.profile %}
+                            <a href="{% url 'profile' %}">
+                                <b>{{ post.user.profile.name }}</b>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'profile-id-user' post.user.id %}">
+                                <b>{{ post.user.profile.name }}</b>
+                            </a>
+                            {% endif %}
+                            <p style="margin-bottom: 0; ">{{ post.user.profile.work_title }}</p>
+                            <small style="font-size: 12px">{{ post.get_date }}</small>
+                        </div>
+                        {% elif post.user.page %}
+                        <img width="50px" height="50px" src="{{ post.user.page.profile_pic.url }}" style="border-radius: 500px; margin-right: 20px">
+                        <div>
+                            {% if request.user.page == post.user.page %}
+                            <a href="{% url 'profile'  %}">
+                                <b>{{ post.user.page.name }}</b>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'profile-id-page' post.user.id %}">
+                                <b>{{ post.user.page.name }}</b>
+                            </a>
+                            {% endif %}
+                            <p style="margin-bottom: 0; ">{{ post.user.page.work_title }}</p>
+                            <small style="font-size: 12px">{{ post.get_date }}</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group dropstart">
+                        <p style="cursor: pointer;" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><strong>...</strong></p>
+                        <ul class="dropdown-menu">
+                            {% if request.user.id == post.user.id %}
+                            <li><a class="dropdown-item" href="{% url 'profile-posts-edit' post.id %}"><small><i class="bi bi-pencil-fill"></i> Edit post</small></a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile-posts-delete' post.id %}"><small><i class="bi bi-x-circle-fill"></i> Delete post</small></a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <p style="margin-bottom: 0px">
+                        {{post.post_text}}
+                    </p>
+                </div>
+                <br> {% if post.post_pic %}
+                <div>
+                    <img class="w-100" src="{{ post.post_pic.url }}" alt="">
+                </div>
+                {% endif %} {% if post.post_video %}
+                <div>
+                    <video class="w-100" controls>
+                    <source src="{{ post.post_video.url }}" type="video/mp4">
+                </video>
+                </div>
+                {% endif %}
+                <div class="d-flex " style="font-size: 14px ; justify-content: space-between; margin: 12px 0px 0px ; ">
+                    <div>
+                        <small data-bs-toggle="modal" data-bs-target="#exampleModal3{{post.id}}" style="color: rgb(97, 97, 97); cursor: pointer;">{{post.likes_count}} Likes</small>
+                        <div class="modal fade" id="exampleModal3{{post.id}}" tabindex="-1 " aria-labelledby="exampleModalLabel " aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Likes</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% for like in post.post_likes %}
+                                        <div>
+                                            <div class="d-flex" style="align-items: center;">
+                                                <i style="font-size: 24px;" class="bi bi-hand-thumbs-up-fill"></i>
+                                                <img style="border-radius: 500px; margin: 0px 5px" width="40px" height="40px" src="{{ like.user.profile.pic.url }}" alt="">
+                                                <div>
+                                                    {% if request.user == like.user %}
+                                                    <a href="{% url 'profile' %} ">{{ like.user.profile.name }}</a> {% else %}
+                                                    <a href="{% url 'profile-connections-id' like.user.profile.id %} ">{{ like.user.profile.name }}</a> {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <small data-bs-toggle="modal" data-bs-target="#exampleModal2{{post.id}}" style="color: rgb(97, 97, 97); cursor: pointer;">{{post.comments_count}} Comments</small>
+                        <div class="modal fade" id="exampleModal2{{post.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% for comment in post.post_comments %}
+                                        <div class="card shadow">
+                                            <div class="card-body">
+                                                <div>
+                                                    <div class="d-flex" style="align-items: center;">
+                                                        <img class="100px" height="75px " src="{{ comment.user.profile.profile_pic.url }}" alt="">
+                                                        <div>
+                                                            {% if request.user.id == comment.user.id %}
+                                                            <a href="{% url 'profile' %}"><b>{{ comment.user.profile.name }}</b></a>
+                                                            <br>
+                                                            <small>{{ comment.user.profile.created_at }}</small> {% else %}
+                                                            <a href="{% url 'profile-id-user' comment.user.id %}"><b>{{ comment.user.profile.name }}</b></a>
+                                                            <br>
+                                                            <small>{{ comment.user.profile.created_at }}</small> {% endif %}
+                                                            <p>{{ comment.comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="d-flex" style="align-items: center; justify-content: space-between;">
+                                                            <div class="d-flex" style="align-items: baseline;">
+                                                                {% if comment.is_liked and request.user in comment.get_post_comment_likes_arr %}
+                                                                <form action="{% url 'profile-posts-id-comment-id-unlike' post.id comment.id %}" method="POST" style="font-size: 12px; padding-right: 5px">
+                                                                    {% csrf_token %}
+                                                                    <i class="bi bi-hand-thumbs-up-fill"></i><input style="border: none; background-color: white;" type="submit" value="Unlike">
+                                                                </form>
+                                                                {% else %}
+                                                                <form action="{% url 'profile-posts-id-comment-id-like' post.id comment.id %}" method="POST" style="font-size: 12px; padding-right: 5px">
+                                                                    {% csrf_token %}
+                                                                    <i class="bi bi-hand-thumbs-up"></i><input style="border: none; background-color: white;" type="submit" value="Like">
+                                                                </form>
+                                                                {% endif %}
+                                                                <b style="padding-right: 5px;"> .</b>
+                                                                <small>{{ comment.comment_likes_count }}<a href="{% url 'profile-posts-id-comment-id-likespage' post.id comment.id %}">  likes </a></small>
+                                                            </div>
+                                                            <div>
+                                                                <small> {{ comment.comment_replies_count }} Replies</small>
+                                                            </div>
+                                                            {% if comment.user.id == request.user.id %}
+                                                            <div>
+                                                                <a href="{% url 'profile-posts-id-comment-id-edit' post.id comment.id %}"><small>Edit</small></a>
+                                                                <a href="{% url 'profile-posts-id-comment-id-delete' post.id comment.id %}"><small style="color: rgb(201, 0, 0);">Delete</small></a>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <form action="{% url 'profile-posts-id-comment-id-reply' post.id comment.id %}" method="POST">
+                                                        {% csrf_token %} {{comment_reply_form.reply}}
+                                                        <div>
+                                                            <button class="btn btn-sm btn-outline-primary" type="submit"><i class="bi bi-reply"></i> Reply</button>
+                                                        </div>
+                                                    </form>
+                                                    <hr>
+                                                    <h6>Replies</h6>
+                                                    {% for reply in comment.comment_replies %}
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-body">
+                                                            <div class="d-flex" style="align-items: center;">
+                                                                <img class="100px" height="75px" src="{{ reply.user.profile.profile_pic.url }}"> {% if request.user.id == reply.user.id %}
+                                                                <div>
+                                                                    <a href="{% url 'profile' %}">
+                                                                        <b>{{ reply.user.profile.name }}</b>
+                                                                    </a>
+                                                                    <p>{{ reply }}</p>
+                                                                </div>
+                                                                {% else %}
+                                                                <div>
+                                                                    <a href="{% url 'profile-id-user' reply.user.id %}">
+                                                                        <b>{{ reply.user.profile.name }}</b>
+                                                                    </a>
+                                                                    <p>{{ reply }}</p>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                            {% if reply.user.id == request.user.id %}
+                                                            <div class="d-flex" style="justify-content: space-between;">
+                                                                <div class="d-flex" style="align-items: baseline;">
+                                                                    {% if reply.is_liked and request.user in reply.get_post_likes_arr %}
+                                                                    <form action="{% url 'profile-posts-id-comment-id-reply-id-unlike' post.id comment.id reply.id %}" method="POST" style="font-size: 12px; padding-right: 5px">
+                                                                        {% csrf_token %}
+                                                                        <i class="bi bi-hand-thumbs-up-fill"></i><input style="border: none; background-color: white;" type="submit" value="Unlike">
+                                                                    </form>
+                                                                    {% else %}
+                                                                    <form style="padding-right: 5px;" action="{% url 'profile-posts-id-comment-id-reply-id-like' post.id comment.id reply.id %}" method="POST">
+                                                                        {% csrf_token %}
+                                                                        <i class="bi bi-hand-thumbs-up"></i><input style="border: none; background-color: white; font-size: 12px" type="submit" value="Like">
+                                                                    </form>
+                                                                    {% endif %}
+                                                                    <b style="padding-right: 5px;"> .</b>
+                                                                    <small> {{ reply.replie_likes_count }}<a href="{% url 'profile-posts-id-comment-id-reply-id-likes_page' post.id comment.id reply.id %}"> likes</a></small>
+                                                                </div>
+                                                                <div>
+                                                                    <a href="{% url 'profile-posts-id-comment-id-reply-id-edit' post.id comment.id reply.id %}"><small>Edit</small></a>
+                                                                    <a href="{% url 'profile-posts-id-comment-id-reply-id-delete' post.id comment.id reply.id %}"><small style="color: rgb(201, 0, 0);">Delete</small></a>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br> {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br> {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <small>
+                    <b>.</b> 515 Share
+                    </small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br> {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock content %}

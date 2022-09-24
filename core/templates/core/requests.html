@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block content %}
+
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <div>
+                <h3>Requests</h3>
+            </div>
+            <hr>
+            {% for request in requests_from_users_arr %}
+            <div class="card shadow">
+                <div class="card-body d-flex" style="align-items: center; justify-content: space-between">
+                    <div class="d-flex" style="align-items: center;">
+                        <img width="100px" height="100px" src="{{ request.profile.pic.url }}" style="border-radius: 500px; margin-right: 25px">
+                        <div>
+                            <a href="{% url 'profile-id-user' request.id %}">
+                                <b>{{ request.profile.name }}</b>
+                            </a>
+                            <p style="margin-bottom: 0;">{{ request.profile.work_title }}</p>
+                            <small>{{ post.profile.created_at }}</small>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <form action="{% url 'profile-requests-accept' %}" method="POST" style="margin-right: 4px;">
+                            {% csrf_token %}
+                            <input type="hidden" name="userId" value={{request.id}}>
+                            <button class="btn btn-sm btn-outline-success"><i class="bi bi-check-lg"></i> Accept</button>
+                        </form>
+                        <form action="{% url 'profile-requests-reject' %}" method="POST" style="margin-right: 4px;">
+                            {% csrf_token %}
+                            <input type="hidden" name="userId" value={{request.id}}>
+                            <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x"></i> Reject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br> {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div>
+        <div class="card shadow col-10 offset-1">
+            <div class="row" style="align-items: center;">
+                <div class="col-6">
+                    <div class="card-body">
+                        <img width="200" height="200" src="{{ employee.profile_pic.url }}" alt="">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card-body">
+                        <h4><b>{{ employee.name }}</b></h4>
+                        <p>{{ employee.work_title }}</p>
+                        {% if employee.resume %}
+                        <div>
+                            <small>Download Resume: </small>
+                            <small>
+                                <a href="{{ employee.resume.url }} " target="_blank">Resume</a>
+                            </small>
+                        </div>
+                        {% endif %}
+                        <div class="d-flex">
+                            {% if not is_connected %}
+                            <form action="{% url 'profile-connections-add' %}" method="POST" style="margin-right: 4px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="userId" value={{employee.user.id}}>
+                                <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus-fill"></i> Connect</button>
+                            </form>
+                            {% endif %}
+                            <div>
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'profile-connections-id-remove' employee.user.id %}"><i class="bi bi-person-dash-fill"></i> Remove</a>
+                                <a class="btn btn-sm btn-outline-dark" href="{% url 'profile-connections-id-block' employee.user.id %}"><i class="bi bi-dash-circle-fill"></i> Block</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div class="card shadow col-10 offset-1">
+            <div class="card-body ">
+                <div>
+                    <h5>About</h5>
+                </div>
+                <div>
+                    <p>{{ employee.about }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div class="card shadow col-10 offset-1">
+            <div class="card-body ">
+                <div>
+                    <h5>Education</h5>
+                </div>
+                <div>
+                    <p>{{ employee.education }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div class="card shadow col-10 offset-1">
+            <div class="card-body ">
+                <div>
+                    <h5>Experience</h5>
+                </div>
+                <div>
+                    <p>{{ employee.experience }}</p>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="">Show more</a>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div class="card shadow col-10 offset-1">
+            <div class="card-body ">
+                <div>
+                    <h5>skills</h5>
+                </div>
+                <div>
+                    {% for skill in employee.skill.all %}
+
+                    <p>{{ skill }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div class="card shadow col-10 offset-1">
+            <div class="card-body ">
+                <div>
+                    <h5>languages</h5>
+                </div>
+                <div>
+                    {% for language in employee.language.all %}
+                    <p>{{ language }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

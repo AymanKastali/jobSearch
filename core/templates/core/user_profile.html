@@ -1,0 +1,303 @@
+{% extends 'base.html' %} {% block content %}
+<section class="profile-section">
+    <div class="info">
+        <div class="card shadow">
+            <div class="row" style="align-items: center;">
+                <div class="col-6">
+                    <div class="card-body">
+                        <img width="200px" height="200px" src="{{ profile.pic.url }}" style="border-radius: 500px;">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card-body">
+                        <h4><b>{{ profile.name }}</b></h4>
+                        <p>{{ profile.work_title }}</p>
+                        {% if profile.profile_resume %}
+                        <div>
+                            <small>Download Resume: </small>
+                            <small>
+                                <a href="{{ profile.profile_resume.url }} " target="_blank">Resume</a>
+                            </small>
+                        </div>
+                        {% endif %}
+                        <!-- Button trigger modal -->
+                        <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="">Contact Info</a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{ profile.name }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6>Contact Info</h6>
+                                        <div>
+                                            <div><b>Email</b></div>
+                                            <div>
+                                                <p>{{ profile.email }}</p>
+                                            </div>
+                                            <div><b>Phone</b></div>
+                                            <div>
+                                                <p>{{ profile.phone }}</p>
+                                            </div>
+                                            <div><b>Birthday</b></div>
+                                            <div>
+                                                <p>{{ profile.date_of_birth }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            {% if not is_friends %}
+                            {% if profile.user.id in connections_request_from_users_id_arr %}
+                            <form action="{% url 'profile-requests-accept' %}" method="POST" style="margin-right: 4px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="userId" value={{profile.user.id}}>
+                                <button class="btn btn-sm btn-outline-success"><i class="bi bi-check-lg"></i> Accept</button>
+                            </form>
+                            <form action="{% url 'profile-requests-reject' %}" method="POST" style="margin-right: 4px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="userId" value={{profile.user.id}}>
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x"></i> Reject</button>
+                            </form>
+                            {% elif profile.user.id in connections_request_sent_id_arr %}
+                            <h6><span class="badge bg-secondary">Requested</span></h6>
+                            {% else %}
+                            {% if request.user.profile.is_page == False %}
+                            <form action="{% url 'profile-connections-add' %}" method="POST" style="margin-right: 4px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="userId" value={{profile.user.id}}>
+                                <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus-fill"></i> Connect</button>
+                            </form>
+                            {% endif %}
+                            {% endif %} {% else %}
+                            <div>
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'profile-connections-id-remove' profile.user.id %}"><i class="bi bi-person-dash-fill"></i> Remove</a>
+                                <a class="btn btn-sm btn-outline-dark" href="{% url 'profile-connections-id-block' profile.user.id %}"><i class="bi bi-dash-circle-fill"></i> Block</a>
+                            </div>
+                            {% endif %}
+                            <a class="btn btn-sm btn-outline-primary" style="margin-right: 5px" href="{% url 'chat-id' profile.user.id %}"><i class="bi bi-chat"></i> Message</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="suggestions ">
+        <div class="card shadow" style="overflow-y: auto; height: 500px;">
+            <div class="card-body ">
+                <h6>Connections suggestions</h6>
+                <hr>
+                {% for suggestion in not_friends_arr %}
+                {% if suggestion.is_page == False %}
+                {% if suggestion.user != request.user and suggestion.user.id not in connections_request_from_users_id_arr %}
+                {% if suggestion.user.id in connections_request_sent_id_arr%}
+                <div class="row" style="align-items: center;">
+                    <div class="col-4 text-center">
+                        <img height="60px" width="60px" src="{{ suggestion.pic.url }}" style="border-radius: 500px;">
+                    </div>
+                    <div class="col-8">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div>
+                                <a href="{% url 'profile-id-user' suggestion.user.id %}">
+                                    <b>{{ suggestion.name }}</b>
+                                </a>
+                            </div>
+                            <div>
+                                <small>{{ suggestion.work_title }}</small>
+                            </div>
+                            <input type="hidden" name="userId" value={{suggestion.user.id}}>
+                            <h6><span class="badge bg-secondary">Requested</span></h6>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                {% else %}
+                <div class="row" style="align-items: center;">
+                    <div class="col-4 text-center">
+                        <img height="60px" width="60px" src="{{ suggestion.pic.url }}" style="border-radius: 500px;">
+                    </div>
+                    <div class="col-8">
+                        <form action="{% url 'profile-connections-add' %}" method="POST">
+                            {% csrf_token %}
+                            <div>
+                                <a href="{% url 'profile-id-user' suggestion.user.id %}">
+                                    <b>{{ suggestion.name }}</b>
+                                </a>
+                            </div>
+                            <div>
+                                <small>{{ suggestion.work_title }}</small>
+                            </div>
+                            <input type="hidden" name="userId" value={{suggestion.user.id}}>
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus-fill"></i> Connect</button>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                {% endif %}
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="about">
+        <div class="card shadow">
+            <div class="card-body">
+                <div>
+                    <h5>About</h5>
+                </div>
+                <div>
+                    <p>{{ profile.about }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="education">
+        <div class="card shadow">
+            <div class="card-body ">
+                <div>
+                    <h5>Education</h5>
+                </div>
+                <div>
+                    <p>{{ profile.profile_education }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+    <div class="jobs">
+        <div class="card shadow" style="overflow-y: auto; height: 500px;">
+            <div class="card-body">
+                <h6>Pages suggestions</h6>
+                <hr> {% for suggestion in suggestions %} {% if suggestion.is_page == True %}
+                <div class="row" style="align-items: center;">
+                    <div class="col-4 text-center">
+                        <img style="border-radius: 500px" width="60px" height="60px" src="{{ suggestion.pic.url }}">
+                    </div>
+                    <div class="col-8">
+                        {% if is_following %}
+                        <form action="{% url 'profile-unfollow' %}" method="POST">
+                            {% csrf_token %}
+                            <a href="{% url 'profile-id-page' suggestion.user.id %}">
+                                <b>{{ suggestion.name }}</b>
+                            </a>
+                            <small>
+                                <p>{{ suggestion.work_title }}</p>
+                            </small>
+                            <input type="hidden" name="userId" value={{suggestion.user.id}}>
+                            <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-dash-lg"></i> Unfollow</button>
+                        </form>
+                        {% elif not is_following %}
+                        <form action="{% url 'profile-follow' %}" method="POST">
+                            {% csrf_token %}
+                            <a href="{% url 'profile-id-page' suggestion.user.id %}">
+                                <b>{{ suggestion.name }}</b>
+                            </a>
+                            <small>
+                                <p>{{ suggestion.work_title }}</p>
+                            </small>
+                            <input type="hidden" name="userId" value={{suggestion.user.id}}>
+                            <button class="btn btn-sm btn-outline-secondary" type="submit"><i class="bi bi-plus-lg"></i> Follow</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                <br> {% endfor %}
+            </div>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="jobs">
+        <div class="card shadow" style="overflow-y: auto; height: 500px;">
+            <div class="card-body ">
+                <h6>Pages suggestions</h6>
+                <hr> {% for suggestion in suggestions %} {% if suggestion.is_page == True and suggestion.user != reqeust.user %}
+                <div class="card-body">
+                    <div class="row" style="align-items: center;">
+                        <div class="col-4">
+                            <img width="60px" height="60px" src="{{ suggestion.pic.url }}" style="border-radius: 500px;">
+                        </div>
+                        <div class="col-8">
+                            {% if suggestion.user in is_following %}
+                            <form action="{% url 'profile-unfollow' %}" method="POST">
+                                {% csrf_token %}
+                                <a href="{% url 'profile-id-page' suggestion.user.id %}">
+                                    <b>{{ suggestion.name }}</b>
+                                </a>
+                                <div>
+                                    <small>{{ suggestion.work_title }}</small>
+                                </div>
+                                <input type="hidden" name="userId" value={{suggestion.user.id}}>
+                                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-dash-lg"></i> Unfollow</button>
+                            </form>
+                            {% elif suggestion.user not in is_following %}
+                            <form action="{% url 'profile-follow' %}" method="POST">
+                                {% csrf_token %}
+                                <a href="{% url 'profile-id-page' suggestion.user.id %}">
+                                    <b>{{ suggestion.name }}</b>
+                                </a>
+                                <div>
+                                    <small>{{ suggestion.work_title }}</small>
+                                </div>
+                                <input type="hidden" name="userId" value={{suggestion.user.id}}>
+                                <button class="btn btn-sm btn-outline-secondary" type="submit"><i class="bi bi-plus-lg"></i> Follow</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="experience">
+        <div class="card shadow">
+            <div class="card-body ">
+                <div>
+                    <h5>Experience</h5>
+                </div>
+                <div>
+                    <p>{{ profile.profile_experience }}</p>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="">Show more</a>
+            </div>
+        </div>
+    </div>
+    <div class="skills">
+        <div class="card shadow">
+            <div class="card-body ">
+                <div>
+                    <h5>skills</h5>
+                </div>
+                <div>
+                    <p>{{ profile.profile_skills }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="languages">
+        <div class="card shadow">
+            <div class="card-body ">
+                <div>
+                    <h5>languages</h5>
+                </div>
+                <div>
+                    <p>{{ profile.profile_language }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

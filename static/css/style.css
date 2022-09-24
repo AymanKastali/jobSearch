@@ -1,0 +1,133 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+*/ a.google {
+    background-color: #dd4b39;
+    color: white;
+}
+
+
+/* 
+p {
+    margin-bottom: 0px !important;
+} */
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+/* Track */
+
+ ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+/* Handle */
+
+ ::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+
+/* Handle on hover */
+
+ ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/* img {
+    border-radius: 500px;
+} */
+
+a {
+    text-decoration: none !important;
+}
+
+section.profile-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: 'info info suggestions' 'about about suggestions' 'education education suggestions' 'experience experience jobs' 'skills skills jobs' 'languages languages jobs';
+    gap: 25px;
+}
+
+.info {
+    grid-area: info
+}
+
+.suggestions {
+    grid-area: suggestions
+}
+
+.about {
+    grid-area: about
+}
+
+.experience {
+    grid-area: experience
+}
+
+.jobs {
+    grid-area: jobs
+}
+
+.education {
+    grid-area: education
+}
+
+.skills {
+    grid-area: skills
+}
+
+.languages {
+    grid-area: languages
+}
+
+section .card .card-body .post-choises {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-pic {
+    object-fit: cover;
+}
+
+section.page-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: 'info info suggestions' 'about about suggestions' 'job-posts job-posts suggestions' 'page-posts page-posts suggestions' 'page-posts page-posts suggestions';
+    gap: 25px;
+}
+
+.info {
+    grid-area: info
+}
+
+.suggestions {
+    grid-area: suggestions
+}
+
+.about {
+    grid-area: about
+}
+
+.job-posts {
+    grid-area: job-posts
+}
+
+.jobs {
+    grid-area: jobs
+}
+
+.page-posts {
+    grid-area: page-posts
+}

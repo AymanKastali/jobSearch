@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <h4>Set an interview appointment for "{{ user.profile.name }}" nominee</h4>
+            <hr>
+            <form method="POST">
+                {% csrf_token %} {{ appointment_form.as_p }}
+                <button type="submit" class="btn btn-sm btn-outline-primary">Send Email</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

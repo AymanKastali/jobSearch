@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block content %}
+
+<section>
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="d-flex" style="justify-content: space-evenly; align-items: baseline;">
+                <div>
+                    <h6>Candidates <a href="{% url 'profile_jobpost_candidates' jobpost.id %}"><span class="badge bg-info">{{ jobpost.get_candidates_count }}</span></a></h6>
+                </div>
+                <div>
+                    <h4><a href="{% url 'profile-jobpost-view' jobpost.id %}">"{{ jobpost }}"</a></h4>
+                </div>
+                <div>
+                    <h6>Nominees <a href="{% url 'profile_jobpost_nominees' jobpost.id %}"><span class="badge bg-success">{{ jobpost.get_nominees_count }}</span></a></h6>
+                </div>
+            </div>
+            <hr>
+            <h4>Candidates:</h4>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                {% for user in candidates_users_id_arr %}
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="{{ user.profile.pic.url }}" height="150px" style="object-fit: cover;" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <div>
+                                <h5 class="card-title" style="margin-bottom: 0px;">
+                                    <a href="{% url 'profile-jobpost-candidate-id' jobpost.id user.id %}">
+                                        <p style="margin-bottom: 0px">{{user.profile.name}}</p>
+                                    </a>
+                                </h5>
+                            </div>
+                            <p class="card-text">{{ user.profile.work_title }}</p>
+                            {% if user.id in nominees_users_id_arr %}
+                            <span class="badge bg-success">Intrested in</span> {% else %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="userId" value='{{user.id}}'>
+                                <button class="btn btn-sm btn-outline-primary">Intrested in</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <div>
+                <h2>
+                    {{ request.user.page.name }} Jobposts
+                </h2>
+            </div>
+            <hr>
+            {% for post in jobposts %}
+            <div>
+                <div class="d-flex" style="justify-content: space-between;">
+                    <div>
+                        <div class="d-flex">
+                            <h5 style="padding-right: 10px">
+                                <a href="{% url 'profile-jobpost-view' post.id %}">{{ post }}</a>
+                            </h5>
+                            {% if post.get_candidates_count > 0 %}
+                            <small><span class="badge bg-success">{{ post.get_candidates_count }} Candidates</span></small>
+                            {% endif %}
+                        </div>
+                        <div style="margin-bottom: 10px; font-size: 14px">
+                            <small>{{ post.get_date }}</small>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-group dropstart">
+                            <p style="cursor: pointer;" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><strong>...</strong></p>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'profile-jobpost-edit' post.id %}"><small><i class="bi bi-pencil-fill"></i> Edit post</small></a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile-jobpost-delete' post.id %}"><small><i class="bi bi-x-circle-fill"></i> Delete post</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h6>Candidates: <a style="color: white" href="{% url 'profile_jobpost_candidates' post.id %}"><span class="badge bg-info">{{ post.get_candidates_count }}</span></a></h6>
+                </div>
+                {% if post.state == True %}
+                <div>
+                    <h6>State: <span class="badge bg-success">Available</span></h6>
+                </div>
+                {% else %}
+                <div>
+                    <h6>State: <span class="badge bg-danger">Unavailabel</span></h6>
+                </div>
+                {% endif %}
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,164 @@
+{% if request.user.profile %}
+
+{% if request.user.profile.is_page == False %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">JobSearch</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div style="justify-content: space-between;" class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div>
+                <form class="d-flex">
+                    <input style="background-color: transparent; color: black;" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            <div>
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile-posts' %}">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile-connections' %}">Connections</a>
+                    </li>
+                    <li class="nav-item">
+                        {% if request.user.profile.is_page == True %}
+                        <a class="nav-link" href="{% url 'profile-jobposts' %}">Jobs</a> {% else %}
+                        <a class="nav-link" href="{% url 'profile-user-jobposts' %}">Jobs</a> {% endif %}
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile-jobsapplied' %}">Jobs applied</a>
+                    </li>
+                    <li class="nav-item">
+                        <p style="cursor: pointer; margin-bottom: 0px;" class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Chats</p>
+                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h5 id="offcanvasRightLabel" style="padding-top: 7px;">Chats</h5>
+                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                {% for chat in last_message_arr %}
+                                <div class="card shadow-sm">
+                                    <div class="card-body" style="border-bottom: 1px solid rgb(212, 212, 212);">
+                                        <div class="d-flex" style="justify-content: space-between;">
+                                            <div>
+                                                <img width="30px" height="30px" style="border-radius: 500px; margin-right: 5px;" src="{{ chat.to_user.profile.pic.url }}" alt="">
+                                                <a href="{% url 'chat-id' chat.to_user.id %}"><b>{{ chat.to_user.profile.name }}</b></a>
+                                            </div>
+                                            <div>
+                                                <small>{{ chat.get_date }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <small>{{ chat.message }}</small>
+                                    </div>
+                                </div>
+                                <br> {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{request.user.profile.name}}</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            {% if request.user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'account_login' %}">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</nav>
+<br> {% else %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">JobSearch</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div style="justify-content: space-between;" class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div>
+                <form class="d-flex">
+                    <input style="background-color: transparent; color: black;" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            <div>
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile-posts' %}">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile-followers' %}">Followers</a>
+                    </li>
+                    <li class="nav-item">
+                        {% if request.user.profile.is_page == True %}
+                        <a class="nav-link" href="{% url 'profile-jobposts' %}">Jobs</a> {% else %}
+                        <a class="nav-link" href="{% url 'profile-user-jobposts' %}">Jobs</a> {% endif %}
+                    </li>
+                    <li class="nav-item">
+                        <p style="cursor: pointer; margin-bottom: 0px;" class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Chats</p>
+                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h5 id="offcanvasRightLabel" style="padding-top: 7px;">Chats</h5>
+                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                {% for chat in last_message_arr %}
+                                <div class="card shadow-sm">
+                                    <div class="card-body" style="border-bottom: 1px solid rgb(212, 212, 212);">
+                                        <div class="d-flex" style="justify-content: space-between;">
+                                            <div>
+                                                <img width="30px" height="30px" style="border-radius: 500px; margin-right: 5px;" src="{{ chat.to_user.profile.pic.url }}" alt="">
+                                                <a href="{% url 'chat-id' chat.to_user.id %}"><b>{{ chat.to_user.profile.name }}</b></a>
+                                            </div>
+                                            <div>
+                                                <small>{{ chat.get_date }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <small>{{ chat.message }}</small>
+                                    </div>
+                                </div>
+                                <br> {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{request.user.profile.name}}</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" style="z-index: 2;">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            {% if request.user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'account_login' %}">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</nav>
+<br>
+{% endif %}
+{% endif %}

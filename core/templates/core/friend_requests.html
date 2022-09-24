@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section>
+    {% for friend in friend_requests %}
+    {{ friend.from_user }}
+    {% endfor %}
+</section>
+
+{% endblock content %}

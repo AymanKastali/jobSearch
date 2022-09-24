@@ -1,0 +1,68 @@
+{% extends 'base.html' %} {% block content %}
+{% if is_page == True %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <h4>Profile edit</h4>
+            <hr>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ profile_form.as_p }}
+                <br>
+                <button class="btn btn-sm btn-outline-primary" type="submit"><i class="bi bi-check-lg"></i> Confirm</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% else %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <h4>Page edit</h4>
+            <hr>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ profile_form.name.label_tag }}
+                {{ profile_form.name }}
+                <br>
+                {{ profile_form.date_of_birth.label_tag }}
+                {{ profile_form.date_of_birth }}
+                <br>
+                {{ profile_form.work_title.label_tag }}
+                {{ profile_form.work_title }}
+                <br>
+                {{ profile_form.about.label_tag }}
+                {{ profile_form.about }}
+                <br>
+                {{ profile_form.pic.label_tag }}
+                {{ profile_form.pic }}
+                <br>
+                {{ profile_form.email.label_tag }}
+                {{ profile_form.email }}
+                <br>
+                {{ profile_form.phone.label_tag }}
+                {{ profile_form.phone }}
+                <br>
+                {{ profile_form.profile_experience.label_tag }}
+                {{ profile_form.profile_experience }}
+                <br>
+                {{ profile_form.profile_language.label_tag }}
+                {{ profile_form.profile_language }}
+                <br>
+                {{ profile_form.profile_skills.label_tag }}
+                {{ profile_form.profile_skills }}
+                <br>
+                {{ profile_form.profile_resume.label_tag }}
+                {{ profile_form.profile_resume }}
+                <br>
+                {{ profile_form.profile_education.label_tag }}
+                {{ profile_form.profile_education }}
+                <br>
+                <button class="btn btn-sm btn-outline-primary" type="submit"><i class="bi bi-check-lg"></i> Confirm</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock content %}

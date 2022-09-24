@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <h4>jobpost add</h4>
+            <hr>
+            <form action="" method="POST">
+                {% csrf_token %} {{ jobpost_form.as_p }}
+                <button class="btn btn-sm btn-outline-primary" type="submit"><i class="bi bi-check-lg"></i> Confirm</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow">
+        <div class="card-body">
+            <h4>Appointments list for "<a href="{% url 'profile-jobpost-view' jobpost.id %}">{{ jobpost }}</a>" job title</h4>
+            <hr>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <label>Nominee ID:</label>
+                <input type="text" name="userId" class="form-control" placeholder="Enter nominee ID here..">
+                <label>Notes:</label>
+                <textarea class="form-control" name="notes" cols="145" rows="3" placeholder="Write notes about a nominee here.."></textarea>
+                <button name="add_note" style="margin-top: 10px;" class="btn btn-sm btn-outline-primary" type="submit">Add note</button>
+            </form>
+            <hr>
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="text-center">
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col">Accept</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nominee in nominees %}
+                    <tr class="text-center">
+                        <th scope="row">{{ nominee.user.get.id }}</th>
+                        <td><a href="{% url 'profile-id-user' nominee.user.get.id %}">{{ nominee.user.get.profile }}</a></td>
+                        <td>{{ nominee.interview_date }}</td>
+                        <td>{{ nominee.interview_time }}</td>
+                        <td>{{ nominee.notes }}</td>
+                        <td>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="userId" value="{{nominee.user.get.id}}"> {% if nominee.accepted == False %}
+                                <button name="hire" value="True" class="btn btn-sm btn-outline-primary" type="submit"><i class="bi bi-check-lg"></i> Hire</button> {% else %}
+                                <h5><span class="badge bg-success"><i class="bi bi-check2-all"></i> Hired</span></h5>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock content %}

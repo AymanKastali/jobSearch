@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% block content %}
+<section>
+    <div class="card shadow col-8 offset-2">
+        <div class="card-body">
+            <div>
+                <h2>
+                    {{ user.page.name }}
+                </h2>
+            </div>
+            <hr>
+            {% for post in jobposts %}
+            <div>
+                <div class="d-flex" style="justify-content: space-between;">
+                    <div>
+                        <div class="d-flex">
+                            <h5 style="padding-right: 10px">
+                                <a href="{% url 'profile-id-page-jobposts-id-post' post.user.id post.id %}">{{ post }}</a>
+                            </h5>
+                            {% if post.get_candidates_count > 0 %}
+                            <small><span class="badge bg-success">{{ post.get_candidates_count }} Candidates</span></small>
+                            {% endif %}
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <small>{{ post.created_at }}</small>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-group dropstart">
+                            <p style="cursor: pointer;" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><strong>...</strong></p>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'profile-posts-edit' post.id %}"><small><i class="bi bi-pencil-fill"></i> Edit post</small></a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile-posts-delete' post.id %}"><small><i class="bi bi-x-circle-fill"></i> Delete post</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                                <li><a class="dropdown-item" href=""><small>extra option</small></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p style="margin-bottom: 0px;">About: <b>{{ post.page.name }}</b></p>
+                    <small>
+                        {{ post.page.about }}
+                    </small>
+                </div>
+                <div>
+                    <h6 style="margin-bottom: 0px;">Location:</h6>
+                    <small>
+                        {{ post.city }}
+                    </small>
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}
